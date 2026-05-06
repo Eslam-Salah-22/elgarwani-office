@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مكتب الجرواني للمحاماة والاستشارات القانونية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --gold-dark: #9a7a2e;
+    --navy: #0a1628;
+    --navy-mid: #122040;
+    --navy-light: #1a2f58;
+    --navy-card: #16253d;
+    --navy-border: #1e3260;
+    --text-main: #f0e6cc;
+    --text-muted: #8a9bc0;
+    --text-dim: #4a5a80;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --orange: #f39c12;
+    --blue: #3498db;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--navy);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    position: fixed;
+    right: 0; top: 0; bottom: 0;
+    width: 240px;
+    background: var(--navy-mid);
+    border-left: 1px solid var(--navy-border);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+  }
+  .sidebar-logo {
+    padding: 24px 20px;
+    border-bottom: 1px solid var(--navy-border);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .sidebar-logo .icon { font-size: 28px; }
+  .sidebar-logo h1 { font-family: 'Amiri', serif; font-size: 20px; color: var(--gold); font-weight: 700; line-height: 1.2; }
+  .sidebar-logo p { font-size: 10px; color: var(--text-muted); }
+  nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 20px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 14px; font-weight: 600;
+    border-right: 3px solid transparent;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .nav-item:hover { background: var(--navy-light); color: var(--text-main); }
+  .nav-item.active {
+    background: linear-gradient(90deg, var(--navy-light), transparent);
+    color: var(--gold);
+    border-right-color: var(--gold);
+  }
+  .nav-item .nav-icon { font-size: 18px; width: 24px; text-align: center; }
+  .nav-badge {
+    margin-right: auto;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 10px; font-weight: 900;
+    padding: 2px 7px;
+    border-radius: 10px;
+  }
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--navy-border);
+    font-size: 11px; color: var(--text-dim);
+    text-align: center;
+  }
+
+  /* ===== MAIN ===== */
+  .main {
+    margin-right: 240px;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+  .topbar {
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--navy-border);
+    padding: 16px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar h2 { font-size: 20px; font-weight: 700; color: var(--text-main); }
+  .topbar p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .topbar-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; border: none;
+    display: inline-flex; align-items: center; gap: 7px;
+    transition: all 0.2s ease;
+  }
+  .btn-gold { background: var(--gold); color: var(--navy); }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--gold); border: 1.5px solid var(--gold); }
+  .btn-outline:hover { background: var(--gold); color: var(--navy); }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .content { padding: 28px; flex: 1; }
+
+  /* ===== PAGES ===== */
+  .page { display: none; animation: fadeIn 0.3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== STATS GRID ===== */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .stat-card:hover { transform: translateY(-3px); }
+  .stat-card::before {
+    content: ''; position: absolute;
+    top: 0; right: 0; width: 4px; height: 100%;
+    border-radius: 0 12px 12px 0;
+  }
+  .stat-card.gold::before { background: var(--gold); }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.red::before { background: var(--red); }
+  .stat-card.blue::before { background: var(--blue); }
+  .stat-card.orange::before { background: var(--orange); }
+  .stat-icon { font-size: 28px; margin-bottom: 10px; }
+  .stat-value { font-size: 32px; font-weight: 900; color: var(--gold); line-height: 1; }
+  .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--navy-border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-header h3 { font-size: 15px; font-weight: 700; color: var(--gold); }
+  .card-body { padding: 20px; }
+
+  /* ===== TABLE ===== */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { border-bottom: 2px solid var(--gold-dark); }
+  thead th { padding: 12px 14px; text-align: right; color: var(--gold); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--navy-border); transition: background 0.15s; }
+  tbody tr:hover { background: var(--navy-light); }
+  tbody td { padding: 12px 14px; color: var(--text-main); vertical-align: middle; }
+  .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  /* ===== BADGES ===== */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+  }
+  .badge-green { background: rgba(46,204,113,0.15); color: var(--green); }
+  .badge-red { background: rgba(231,76,60,0.15); color: var(--red); }
+  .badge-orange { background: rgba(243,156,18,0.15); color: var(--orange); }
+  .badge-blue { background: rgba(52,152,219,0.15); color: var(--blue); }
+  .badge-gold { background: rgba(201,168,76,0.15); color: var(--gold); }
+  .badge-gray { background: rgba(138,155,192,0.15); color: var(--text-muted); }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 200;
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--navy-mid);
+    border: 1px solid var(--navy-border);
+    border-radius: 16px;
+    width: 100%; max-width: 560px;
+    max-height: 90vh; overflow-y: auto;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--navy-border);
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; background: var(--navy-mid); z-index: 1;
+  }
+  .modal-header h3 { font-size: 17px; font-weight: 700; color: var(--gold); }
+  .modal-close { background: none; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; padding: 2px 8px; border-radius: 6px; }
+  .modal-close:hover { background: var(--navy-light); color: var(--text-main); }
+  .modal-body { padding: 24px; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--navy-border); display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* ===== FORM ===== */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-grid.single { grid-template-columns: 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 7px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  input, select, textarea {
+    background: var(--navy);
+    border: 1.5px solid var(--navy-border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text-main);
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+  select option { background: var(--navy-mid); }
+
+  /* ===== DASHBOARD GRID ===== */
+  .dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+
+  /* ===== SESSION ITEM ===== */
+  .session-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--navy-border);
+  }
+  .session-item:last-child { border-bottom: none; }
+  .session-date {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 10px;
+    padding: 8px 12px;
+    text-align: center;
+    min-width: 56px;
+  }
+  .session-date .day { font-size: 20px; font-weight: 900; color: var(--gold); line-height: 1; }
+  .session-date .month { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+  .session-info { flex: 1; }
+  .session-info h4 { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .session-info p { font-size: 11px; color: var(--text-muted); }
+
+  /* ===== SEARCH BAR ===== */
+  .search-bar {
+    display: flex; gap: 10px; margin-bottom: 20px; align-items: center;
+  }
+  .search-wrap { position: relative; flex: 1; }
+  .search-wrap input { padding-right: 36px; }
+  .search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
+
+  /* ===== FINANCE ===== */
+  .finance-summary {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-bottom: 20px;
+  }
+  .fin-card {
+    background: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-radius: 12px; padding: 20px; text-align: center;
+  }
+  .fin-card .amount { font-size: 26px; font-weight: 900; font-family: 'Amiri', serif; margin-bottom: 4px; }
+  .fin-card .label { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+
+  /* ===== ALERT ===== */
+  .alert {
+    padding: 12px 16px; border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .alert-success { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); color: var(--green); }
+  .alert-warning { background: rgba(243,156,18,0.1); border: 1px solid rgba(243,156,18,0.3); color: var(--orange); }
+
+  /* ===== MOBILE TOGGLE ===== */
+  .mob-menu-btn {
+    display: none;
+    background: none; border: none; color: var(--gold);
+    font-size: 22px; cursor: pointer; padding: 6px;
+  }
+  .sidebar-overlay { display: none; }
+
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(100%); }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
+    .sidebar-overlay.open { display: block; }
+    .main { margin-right: 0; }
+    .mob-menu-btn { display: block; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .dash-grid { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .finance-summary { grid-template-columns: 1fr; }
+    .content { padding: 16px; }
+    .topbar { padding: 12px 16px; }
+  }
+
+
+  /* ===== COURT SEARCH ===== */
+  .court-search-wrap { position: relative; }
+  .court-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0; left: 0;
+    background: var(--navy-mid);
+    border: 1.5px solid var(--gold);
+    border-radius: 10px;
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 500;
+    display: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .court-dropdown.open { display: block; }
+  .court-group-label {
+    padding: 8px 14px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(201,168,76,0.06);
+    border-bottom: 1px solid var(--navy-border);
+    position: sticky; top: 0;
+  }
+  .court-option {
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-main);
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+  }
+  .court-option:hover, .court-option.highlighted { background: rgba(201,168,76,0.12); color: var(--gold); }
+  .court-option mark { background: rgba(201,168,76,0.3); color: var(--gold); border-radius: 3px; padding: 0 2px; }
+  .court-no-result { padding: 18px; text-align: center; color: var(--text-muted); font-size: 13px; }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--navy-border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold-dark); }
+
+  /* ===== DETAIL VIEW ===== */
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .detail-item label { display: block; font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .detail-item span { font-size: 14px; color: var(--text-main); font-weight: 600; }
+
+  .progress-bar { background: var(--navy-border); border-radius: 10px; height: 6px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); border-radius: 10px; transition: width 0.5s ease; }
+
+  .tab-bar { display: flex; gap: 4px; background: var(--navy); border-radius: 10px; padding: 4px; margin-bottom: 20px; }
+  .tab-item { flex: 1; padding: 9px; text-align: center; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-muted); transition: all 0.2s; }
+  .tab-item.active { background: var(--navy-card); color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    
+    <div>
+      <h1>المحامي الذكي</h1>
+      <p>إدارة مكتب المحاماة</p>
+    </div>
+  </div>
+  <nav>
+    <div class="nav-item active" onclick="showPage('dashboard', this)">
+      <span class="nav-icon">🏠</span> الرئيسية
+    </div>
+    <div class="nav-item" onclick="showPage('clients', this)">
+      <span class="nav-icon">👥</span> الموكلين
+      <span class="nav-badge" id="clientsBadge">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('cases', this)">
+      <span class="nav-icon">📁</span> القضايا
+      <span class="nav-badge" id="casesBadge">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('sessions', this)">
+      <span class="nav-icon">📅</span> الجلسات
+      <span class="nav-badge" id="sessionsBadge">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('finance', this)">
+      <span class="nav-icon">💰</span> المالية
+    </div>
+    <div class="nav-item" onclick="showPage('notes', this)">
+      <span class="nav-icon">📝</span> الملاحظات
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    مكتب الجرواني &copy; 2025<br>
+    <span style="color:var(--gold)">للمحاماة والاستشارات القانونية</span>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="mob-menu-btn" onclick="openSidebar()">☰</button>
+        <div>
+          <h2 id="pageTitle">الرئيسية</h2>
+          <p id="pageDate"></p>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions" id="topbarActions"></div>
+  </div>
+
+  <div class="content">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="page active" id="page-dashboard">
+      <div style="background:linear-gradient(135deg,var(--navy-mid),var(--navy-light));border:1px solid var(--navy-border);border-radius:14px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:20px;">
+        <img src="data:image/jpeg;base64,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AAAAAAAAAAAAAAAAAAACAAAAAAAAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAf/xAAC/9oADAMBAAIAAwAAACEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBB/8QAAv/aAAwDAQACAAMAAAAQ8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888808888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888844z9xw3x198888888888888888888888888888888888888888888888888848l63584JBNLUQuKD88888888888888888888888888888888888888888888888AU6c98++++8888d+h8888888888888888888888888888888888888888888888888fV6xxx1++4yxwkG88888888888888888888888888888888884wwwwwwwwwwww885YDIjvBWKKdNkQ+8888888888888888888888888888888888oAAAAAAAAAAAA884U5nV4Is/wDPK/qmvPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKAAAAAAAAAAAAPPDVKS/cn2PvPPLEKvPPPPPPPPPPPPPPOPPPPPPPPPPPPPPPPPPKAAAAAAAAAAAAPPK3LL+5DsfvEe83PvPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPOEIAAAAAAAAAAAAPPFFbTXfStTfPO/vHvPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPAAAAAAAAAAAAAAPPF+PZVfJ+vsuBCvPvPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKAAAAAAABPPPPPMCr9qe2MxKe7tngXvPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPOJKAAAAAAAFfPPPPKNp/fPPPPPvrvNSffPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKAAAAAAAFfPPPPPBsUMaTT3ym/qi1HvPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKAAAAAAAFfPPPPfPErSKe8HCXRRnffPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKAAAAAAAFfPPPPfPPKfR63G9at0ffPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKAAAAAAAFfPPPPPPPPLKbw+6YkvPPPIPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKAAAAAAAFfPPPPPPPPPLCXmdrfPPKABPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKAAAAAAAFPPPPPPPPPPPPLDPPPPPPLDPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKAAFPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKAAFPL0KaaffPPFMIRBfKPJINOHJEMKcJEfLM4n/PPPPPPPPPPPPPPPPPPPPPPPPKAAFPF0BaNPPPCDPCt0FeFKPlqoumlicfJaUXfXPPPPPPPPPPPPPPPPPPPPPPPPPKAAFPMPffFOEKONfEtSTaEeXujqtrubZfD/wDXTlTzzzzzzzzzzzzzzzzzzzzzzzzygABTzHFlWHTjyhnl0EnGgDjyQzxzx3RFlDRxy8XzzzzzzzzzzzzzzzzzzzzzzzzygABTzzzzzzzzzzzjzzzzzzzzzziTzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzygABTzzzzzzz3jwD5IRQSwzRJpIqoQTBTzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz2EmlJ6u5B0nwQIKPJjBmDzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzywwxDCCDzywgHDCCxyzwxzzzzzzzzDzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzywwxzzzywxzzzzzzzzzzzzzzzwBDzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwwgzzzzzzzzzzzzzzzzzzzzzzzzzzzzwDDDTzzzzzzzzzzzzzzzzzzzzzzzzygABzCDTzzzzzzzzzzzzzzzzzzzzzzzzzzzwgAAAADTzzzzzzzzzzzzzzzzzzzzwAAAAwABTzzzzzzzzzzzzzzzzzzzzzzzzzzzwAAAAAADDzzzzzzzzDzDDDDTzzjzAAARzwxzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzTzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzDGEHHzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzyEEEGEE1nzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzykEEEEFX033zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzyykEEEEE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" alt="Logo" style="width:70px;height:70px;object-fit:contain;background:#fff;border-radius:10px;padding:4px;flex-shrink:0;">
+        <div>
+          <h2 style="font-family:'Amiri',serif;font-size:22px;color:var(--gold);margin-bottom:4px;">مكتب الجرواني للمحاماة والاستشارات القانونية</h2>
+          <p style="color:var(--text-muted);font-size:13px;">EL-GARWANI LAW OFFICE &nbsp;|&nbsp; نظام إدارة المكتب</p>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card gold">
+          <div class="stat-icon">👥</div>
+          <div class="stat-value" id="stat-clients">0</div>
+          <div class="stat-label">إجمالي الموكلين</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon">📁</div>
+          <div class="stat-value" id="stat-cases">0</div>
+          <div class="stat-label">إجمالي القضايا</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-icon">⚖️</div>
+          <div class="stat-value" id="stat-active">0</div>
+          <div class="stat-label">قضايا جارية</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">💰</div>
+          <div class="stat-value" id="stat-income">0</div>
+          <div class="stat-label">إجمالي الأتعاب (ج.م)</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-icon">📅</div>
+          <div class="stat-value" id="stat-sessions">0</div>
+          <div class="stat-label">جلسات هذا الشهر</div>
+        </div>
+      </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3>⚡ القضايا الحديثة</h3>
+            <button class="btn btn-outline btn-sm" onclick="showPage('cases', document.querySelector('[onclick*=cases]'))">عرض الكل</button>
+          </div>
+          <div class="card-body">
+            <div id="recentCases">
+              <div class="empty-state"><div class="empty-icon">📁</div><p>لا توجد قضايا بعد</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>📅 الجلسات القادمة</h3>
+          </div>
+          <div class="card-body">
+            <div id="upcomingSessions">
+              <div class="empty-state"><div class="empty-icon">📅</div><p>لا توجد جلسات</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CLIENTS ===== -->
+    <div class="page" id="page-clients">
+      <div class="search-bar">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="بحث في الموكلين..." id="clientSearch" oninput="renderClients()">
+        </div>
+        <button class="btn btn-gold" onclick="openModal('clientModal')">+ إضافة موكل</button>
+      </div>
+      <div class="card">
+        <div class="card-body" style="padding:0">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>الاسم</th>
+                  <th>رقم الهاتف</th>
+                  <th>الرقم القومي</th>
+                  <th>المدينة</th>
+                  <th>القضايا</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="clientsTable"></tbody>
+            </table>
+            <div id="clientsEmpty" class="empty-state" style="display:none">
+              <div class="empty-icon">👥</div><p>لا يوجد موكلين. أضف موكلاً جديداً!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CASES ===== -->
+    <div class="page" id="page-cases">
+      <div class="search-bar">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="بحث في القضايا..." id="caseSearch" oninput="renderCases()">
+        </div>
+        <select id="caseFilter" onchange="renderCases()" style="width:auto;padding:9px 14px">
+          <option value="">كل الحالات</option>
+          <option value="جارية">جارية</option>
+          <option value="محكوم فيها">محكوم فيها</option>
+          <option value="استئناف">استئناف</option>
+          <option value="نقض">نقض</option>
+          <option value="مغلقة">مغلقة</option>
+        </select>
+        <button class="btn btn-gold" onclick="openModal('caseModal')">+ إضافة قضية</button>
+      </div>
+      <div class="card">
+        <div class="card-body" style="padding:0">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>رقم القضية</th>
+                  <th>الموكل</th>
+                  <th>النوع</th>
+                  <th>المحكمة</th>
+                  <th>الحالة</th>
+                  <th>الجلسة القادمة</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="casesTable"></tbody>
+            </table>
+            <div id="casesEmpty" class="empty-state" style="display:none">
+              <div class="empty-icon">📁</div><p>لا توجد قضايا. أضف قضية جديدة!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SESSIONS ===== -->
+    <div class="page" id="page-sessions">
+      <div class="search-bar">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="بحث في الجلسات..." id="sessionSearch" oninput="renderSessions()">
+        </div>
+        <button class="btn btn-gold" onclick="openModal('sessionModal')">+ إضافة جلسة</button>
+      </div>
+      <div class="card">
+        <div class="card-body" style="padding:0">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>التاريخ</th>
+                  <th>الوقت</th>
+                  <th>القضية</th>
+                  <th>الموكل</th>
+                  <th>المحكمة</th>
+                  <th>الدائرة</th>
+                  <th>النتيجة</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="sessionsTable"></tbody>
+            </table>
+            <div id="sessionsEmpty" class="empty-state" style="display:none">
+              <div class="empty-icon">📅</div><p>لا توجد جلسات مسجلة</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FINANCE ===== -->
+    <div class="page" id="page-finance">
+      <div class="finance-summary">
+        <div class="fin-card">
+          <div class="amount" style="color:var(--green)" id="fin-total">0 ج.م</div>
+          <div class="label">إجمالي الأتعاب</div>
+        </div>
+        <div class="fin-card">
+          <div class="amount" style="color:var(--gold)" id="fin-paid">0 ج.م</div>
+          <div class="label">المبالغ المحصلة</div>
+        </div>
+        <div class="fin-card">
+          <div class="amount" style="color:var(--red)" id="fin-due">0 ج.م</div>
+          <div class="label">المبالغ المستحقة</div>
+        </div>
+      </div>
+      <div class="search-bar">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="بحث في المعاملات المالية..." id="finSearch" oninput="renderFinance()">
+        </div>
+        <button class="btn btn-gold" onclick="openModal('financeModal')">+ إضافة فاتورة</button>
+      </div>
+      <div class="card">
+        <div class="card-body" style="padding:0">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>التاريخ</th>
+                  <th>الموكل</th>
+                  <th>القضية</th>
+                  <th>البيان</th>
+                  <th>المبلغ الكلي</th>
+                  <th>المدفوع</th>
+                  <th>المتبقي</th>
+                  <th>الحالة</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="financeTable"></tbody>
+            </table>
+            <div id="financeEmpty" class="empty-state" style="display:none">
+              <div class="empty-icon">💰</div><p>لا توجد معاملات مالية</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NOTES ===== -->
+    <div class="page" id="page-notes">
+      <div class="search-bar">
+        <button class="btn btn-gold" onclick="openModal('noteModal')">+ إضافة ملاحظة</button>
+      </div>
+      <div id="notesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px"></div>
+      <div id="notesEmpty" class="empty-state" style="display:none">
+        <div class="empty-icon">📝</div><p>لا توجد ملاحظات. أضف ملاحظة جديدة!</p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Client Modal -->
+<div class="modal-overlay" id="clientModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>👤 إضافة موكل جديد</h3>
+      <button class="modal-close" onclick="closeModal('clientModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>الاسم بالكامل *</label><input type="text" id="c-name" placeholder="أحمد محمد علي"></div>
+        <div class="form-group"><label>رقم الهاتف *</label><input type="tel" id="c-phone" placeholder="01012345678"></div>
+        <div class="form-group"><label>الرقم القومي</label><input type="text" id="c-nid" maxlength="14" placeholder="30001011234567"></div>
+        <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="c-email" placeholder="example@mail.com"></div>
+        <div class="form-group"><label>المدينة</label>
+          <select id="c-city">
+            <option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option><option>الأقصر</option><option>أسوان</option><option>أسيوط</option><option>الإسماعيلية</option><option>البحيرة</option><option>بني سويف</option><option>بورسعيد</option><option>جنوب سيناء</option><option>الدقهلية</option><option>دمياط</option><option>سوهاج</option><option>السويس</option><option>الشرقية</option><option>شمال سيناء</option><option>الغربية</option><option>الفيوم</option><option>القليوبية</option><option>قنا</option><option>كفر الشيخ</option><option>مطروح</option><option>المنوفية</option><option>المنيا</option><option>الوادي الجديد</option>
+          </select>
+        </div>
+        <div class="form-group"><label>نوع العلاقة</label>
+          <select id="c-type"><option>فرد</option><option>شركة</option><option>مؤسسة</option></select>
+        </div>
+        <div class="form-group full"><label>العنوان</label><input type="text" id="c-address" placeholder="الشارع، الحي، المدينة"></div>
+        <div class="form-group full"><label>ملاحظات</label><textarea id="c-notes" placeholder="أي ملاحظات خاصة بالموكل..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('clientModal')">إلغاء</button>
+      <button class="btn btn-gold" onclick="saveClient()">💾 حفظ الموكل</button>
+    </div>
+  </div>
+</div>
+
+<!-- Case Modal -->
+<div class="modal-overlay" id="caseModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📁 إضافة قضية جديدة</h3>
+      <button class="modal-close" onclick="closeModal('caseModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>رقم القضية *</label><input type="text" id="cs-num" placeholder="2025/1234"></div>
+        <div class="form-group"><label>الموكل *</label>
+          <select id="cs-client"><option value="">-- اختر موكل --</option></select>
+        </div>
+        <div class="form-group"><label>نوع القضية *</label>
+          <select id="cs-type">
+            <option>مدني</option><option>جنائي</option><option>أحوال شخصية</option><option>تجاري</option><option>عمالي</option><option>إداري</option><option>دستوري</option><option>عقاري</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>المحكمة * &nbsp;<span style="color:var(--text-muted);font-weight:400;font-size:11px">(240 محكمة - ابحث بالاسم)</span></label>
+          <div class="court-search-wrap" id="cs-court-wrap">
+            <input type="text" id="cs-court" placeholder="🔍 اكتب اسم المحكمة للبحث..." autocomplete="off"
+              oninput="courtSearch('cs-court')" onfocus="courtSearch('cs-court')" onblur="courtBlur('cs-court')" style="width:100%">
+            <div class="court-dropdown" id="cs-court-dropdown"></div>
+          </div>
+        </div>
+        <div class="form-group"><label>الدائرة</label><input type="text" id="cs-circuit" placeholder="الدائرة الثالثة مدني"></div>
+        <div class="form-group"><label>الخصم</label><input type="text" id="cs-opponent" placeholder="اسم الخصم"></div>
+        <div class="form-group"><label>الحالة</label>
+          <select id="cs-status">
+            <option>جارية</option><option>محكوم فيها</option><option>استئناف</option><option>نقض</option><option>مغلقة</option>
+          </select>
+        </div>
+        <div class="form-group"><label>الجلسة القادمة</label><input type="date" id="cs-nextdate"></div>
+        <div class="form-group full"><label>موضوع القضية</label><textarea id="cs-subject" placeholder="وصف موجز لموضوع القضية..."></textarea></div>
+        <div class="form-group full"><label>ملاحظات</label><textarea id="cs-notes" placeholder="أي ملاحظات..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('caseModal')">إلغاء</button>
+      <button class="btn btn-gold" onclick="saveCase()">💾 حفظ القضية</button>
+    </div>
+  </div>
+</div>
+
+<!-- Session Modal -->
+<div class="modal-overlay" id="sessionModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📅 إضافة جلسة</h3>
+      <button class="modal-close" onclick="closeModal('sessionModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>تاريخ الجلسة *</label><input type="date" id="se-date"></div>
+        <div class="form-group"><label>الوقت</label><input type="time" id="se-time"></div>
+        <div class="form-group"><label>القضية *</label>
+          <select id="se-case"><option value="">-- اختر قضية --</option></select>
+        </div>
+        <div class="form-group full"><label>المحكمة &nbsp;<span style="color:var(--text-muted);font-weight:400;font-size:11px">(240 محكمة - ابحث بالاسم)</span></label>
+          <div class="court-search-wrap" id="se-court-wrap">
+            <input type="text" id="se-court" placeholder="🔍 اكتب اسم المحكمة للبحث..." autocomplete="off"
+              oninput="courtSearch('se-court')" onfocus="courtSearch('se-court')" onblur="courtBlur('se-court')" style="width:100%">
+            <div class="court-dropdown" id="se-court-dropdown"></div>
+          </div>
+        </div>
+        <div class="form-group"><label>الدائرة</label><input type="text" id="se-circuit" placeholder="الدائرة"></div>
+        <div class="form-group"><label>نتيجة الجلسة</label>
+          <select id="se-result">
+            <option value="">قادمة</option><option>تأجيل</option><option>حكم لصالح الموكل</option><option>حكم ضد الموكل</option><option>صلح</option><option>انقطاع</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>ملاحظات الجلسة</label><textarea id="se-notes" placeholder="ما حدث في الجلسة، القرارات، إلخ..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('sessionModal')">إلغاء</button>
+      <button class="btn btn-gold" onclick="saveSession()">💾 حفظ الجلسة</button>
+    </div>
+  </div>
+</div>
+
+<!-- Finance Modal -->
+<div class="modal-overlay" id="financeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>💰 إضافة فاتورة أتعاب</h3>
+      <button class="modal-close" onclick="closeModal('financeModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>الموكل *</label>
+          <select id="fi-client"><option value="">-- اختر موكل --</option></select>
+        </div>
+        <div class="form-group"><label>القضية</label>
+          <select id="fi-case"><option value="">-- اختر قضية --</option></select>
+        </div>
+        <div class="form-group"><label>التاريخ *</label><input type="date" id="fi-date"></div>
+        <div class="form-group"><label>البيان *</label><input type="text" id="fi-desc" placeholder="أتعاب جلسة / استشارة / عقد..."></div>
+        <div class="form-group"><label>المبلغ الكلي (ج.م) *</label><input type="number" id="fi-total" placeholder="5000" min="0"></div>
+        <div class="form-group"><label>المبلغ المدفوع (ج.م)</label><input type="number" id="fi-paid" placeholder="2000" min="0"></div>
+        <div class="form-group full"><label>ملاحظات</label><textarea id="fi-notes" placeholder="أي تفاصيل إضافية..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('financeModal')">إلغاء</button>
+      <button class="btn btn-gold" onclick="saveFinance()">💾 حفظ الفاتورة</button>
+    </div>
+  </div>
+</div>
+
+<!-- Note Modal -->
+<div class="modal-overlay" id="noteModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📝 إضافة ملاحظة</h3>
+      <button class="modal-close" onclick="closeModal('noteModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid single">
+        <div class="form-group"><label>العنوان *</label><input type="text" id="no-title" placeholder="عنوان الملاحظة"></div>
+        <div class="form-group"><label>الفئة</label>
+          <select id="no-cat">
+            <option>عامة</option><option>قانونية</option><option>مهمة</option><option>تذكير</option>
+          </select>
+        </div>
+        <div class="form-group"><label>المحتوى *</label><textarea id="no-content" style="min-height:140px" placeholder="اكتب ملاحظتك هنا..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('noteModal')">إلغاء</button>
+      <button class="btn btn-gold" onclick="saveNote()">💾 حفظ الملاحظة</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" style="position:fixed;bottom:24px;left:24px;background:var(--navy-mid);border:1px solid var(--gold);color:var(--text-main);padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;transform:translateY(100px);transition:transform 0.3s ease;display:flex;align-items:center;gap:10px;max-width:320px"></div>
+
+<script>
+// ===== DATA STORE =====
+let db = {
+  clients: [],
+  cases: [],
+  sessions: [],
+  finance: [],
+  notes: []
+};
+
+let editId = { clients: null, cases: null, sessions: null, finance: null };
+
+// Load from localStorage
+function loadData() {
+  try {
+    const saved = localStorage.getItem('lawyerApp');
+    if (saved) db = JSON.parse(saved);
+  } catch(e) {}
+}
+
+function saveData() {
+  localStorage.setItem('lawyerApp', JSON.stringify(db));
+}
+
+// ===== HELPERS =====
+function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
+
+function toast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.innerHTML = (type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️') + ' ' + msg;
+  t.style.transform = 'translateY(0)';
+  setTimeout(() => { t.style.transform = 'translateY(100px)'; }, 3000);
+}
+
+function formatDate(d) {
+  if (!d) return '-';
+  const date = new Date(d);
+  return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function getClient(id) { return db.clients.find(c => c.id === id); }
+function getCase(id) { return db.cases.find(c => c.id === id); }
+
+// ===== NAV =====
+const pageTitles = {
+  dashboard: 'الرئيسية - مكتب الجرواني',
+  clients: 'إدارة الموكلين',
+  cases: 'إدارة القضايا',
+  sessions: 'جدول الجلسات',
+  finance: 'الشؤون المالية',
+  notes: 'الملاحظات القانونية'
+};
+
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[name] || name;
+  closeSidebar();
+  renderPage(name);
+}
+
+function renderPage(name) {
+  if (name === 'dashboard') renderDashboard();
+  else if (name === 'clients') renderClients();
+  else if (name === 'cases') renderCases();
+  else if (name === 'sessions') renderSessions();
+  else if (name === 'finance') renderFinance();
+  else if (name === 'notes') renderNotes();
+}
+
+// ===== MODAL =====
+function openModal(id) {
+  populateSelects();
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  resetModal(id);
+}
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); });
+});
+
+function resetModal(id) {
+  const modal = document.getElementById(id);
+  modal.querySelectorAll('input, textarea').forEach(el => el.value = '');
+  modal.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  if (id === 'clientModal') editId.clients = null;
+  if (id === 'caseModal') editId.cases = null;
+  if (id === 'sessionModal') editId.sessions = null;
+  if (id === 'financeModal') editId.finance = null;
+}
+
+function populateSelects() {
+  // Client selects
+  ['cs-client', 'fi-client'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = '<option value="">-- اختر موكل --</option>';
+    db.clients.forEach(c => { sel.innerHTML += `<option value="${c.id}">${c.name}</option>`; });
+  });
+  // Case selects
+  ['se-case', 'fi-case'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = '<option value="">-- اختر قضية --</option>';
+    db.cases.forEach(c => {
+      const cl = getClient(c.clientId);
+      sel.innerHTML += `<option value="${c.id}">${c.caseNum} - ${cl ? cl.name : ''}</option>`;
+    });
+  });
+}
+
+// ===== SIDEBAR MOBILE =====
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// ===== CLIENTS =====
+function saveClient() {
+  const name = document.getElementById('c-name').value.trim();
+  const phone = document.getElementById('c-phone').value.trim();
+  if (!name || !phone) { toast('الاسم ورقم الهاتف مطلوبان', 'error'); return; }
+  const client = {
+    id: editId.clients || genId(),
+    name, phone,
+    nid: document.getElementById('c-nid').value.trim(),
+    email: document.getElementById('c-email').value.trim(),
+    city: document.getElementById('c-city').value,
+    type: document.getElementById('c-type').value,
+    address: document.getElementById('c-address').value.trim(),
+    notes: document.getElementById('c-notes').value.trim(),
+    createdAt: editId.clients ? (db.clients.find(c=>c.id===editId.clients)||{}).createdAt || Date.now() : Date.now()
+  };
+  if (editId.clients) {
+    const idx = db.clients.findIndex(c => c.id === editId.clients);
+    db.clients[idx] = client;
+    toast('تم تحديث بيانات الموكل');
+  } else {
+    db.clients.push(client);
+    toast('تم إضافة الموكل بنجاح');
+  }
+  saveData(); closeModal('clientModal'); renderClients(); updateBadges();
+}
+
+function renderClients() {
+  const q = (document.getElementById('clientSearch')?.value || '').toLowerCase();
+  const filtered = db.clients.filter(c =>
+    c.name.toLowerCase().includes(q) || c.phone.includes(q) || (c.nid||'').includes(q)
+  );
+  const tbody = document.getElementById('clientsTable');
+  const empty = document.getElementById('clientsEmpty');
+  if (!filtered.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = filtered.map((c, i) => {
+    const cases = db.cases.filter(cs => cs.clientId === c.id).length;
+    return `<tr>
+      <td style="color:var(--text-muted)">${i+1}</td>
+      <td><strong>${c.name}</strong><br><span style="font-size:11px;color:var(--text-muted)">${c.type}</span></td>
+      <td>${c.phone}</td>
+      <td style="font-family:monospace;font-size:12px">${c.nid || '-'}</td>
+      <td>${c.city}</td>
+      <td><span class="badge badge-blue">${cases} قضية</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editClient('${c.id}')">✏️ تعديل</button>
+        <button class="btn btn-sm" style="background:rgba(231,76,60,0.15);color:var(--red);border:none;margin-right:4px" onclick="deleteItem('clients','${c.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function editClient(id) {
+  const c = getClient(id);
+  if (!c) return;
+  editId.clients = id;
+  document.getElementById('c-name').value = c.name;
+  document.getElementById('c-phone').value = c.phone;
+  document.getElementById('c-nid').value = c.nid || '';
+  document.getElementById('c-email').value = c.email || '';
+  document.getElementById('c-city').value = c.city;
+  document.getElementById('c-type').value = c.type;
+  document.getElementById('c-address').value = c.address || '';
+  document.getElementById('c-notes').value = c.notes || '';
+  document.querySelector('#clientModal .modal-header h3').textContent = '✏️ تعديل بيانات الموكل';
+  openModal('clientModal');
+}
+
+// ===== CASES =====
+function saveCase() {
+  const caseNum = document.getElementById('cs-num').value.trim();
+  const clientId = document.getElementById('cs-client').value;
+  if (!caseNum || !clientId) { toast('رقم القضية والموكل مطلوبان', 'error'); return; }
+  const caseObj = {
+    id: editId.cases || genId(),
+    caseNum, clientId,
+    type: document.getElementById('cs-type').value,
+    court: document.getElementById('cs-court').value,
+    circuit: document.getElementById('cs-circuit').value.trim(),
+    opponent: document.getElementById('cs-opponent').value.trim(),
+    status: document.getElementById('cs-status').value,
+    nextDate: document.getElementById('cs-nextdate').value,
+    subject: document.getElementById('cs-subject').value.trim(),
+    notes: document.getElementById('cs-notes').value.trim(),
+    createdAt: editId.cases ? (db.cases.find(c=>c.id===editId.cases)||{}).createdAt || Date.now() : Date.now()
+  };
+  if (editId.cases) {
+    db.cases[db.cases.findIndex(c => c.id === editId.cases)] = caseObj;
+    toast('تم تحديث القضية');
+  } else {
+    db.cases.push(caseObj);
+    toast('تم إضافة القضية بنجاح');
+  }
+  saveData(); closeModal('caseModal'); renderCases(); updateBadges();
+}
+
+function renderCases() {
+  const q = (document.getElementById('caseSearch')?.value || '').toLowerCase();
+  const filter = document.getElementById('caseFilter')?.value || '';
+  let filtered = db.cases.filter(c => {
+    const cl = getClient(c.clientId);
+    return (c.caseNum.toLowerCase().includes(q) || (cl?.name||'').toLowerCase().includes(q)) &&
+           (!filter || c.status === filter);
+  });
+  const tbody = document.getElementById('casesTable');
+  const empty = document.getElementById('casesEmpty');
+  if (!filtered.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  const statusColors = { 'جارية': 'badge-orange', 'محكوم فيها': 'badge-green', 'استئناف': 'badge-blue', 'نقض': 'badge-gold', 'مغلقة': 'badge-gray' };
+  tbody.innerHTML = filtered.map((c, i) => {
+    const cl = getClient(c.clientId);
+    return `<tr>
+      <td style="color:var(--text-muted)">${i+1}</td>
+      <td><strong style="color:var(--gold)">${c.caseNum}</strong></td>
+      <td>${cl ? cl.name : '-'}</td>
+      <td><span class="badge badge-blue">${c.type}</span></td>
+      <td style="font-size:12px">${c.court}</td>
+      <td><span class="badge ${statusColors[c.status]||'badge-gray'}">${c.status}</span></td>
+      <td>${c.nextDate ? formatDate(c.nextDate) : '-'}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editCase('${c.id}')">✏️</button>
+        <button class="btn btn-sm" style="background:rgba(231,76,60,0.15);color:var(--red);border:none;margin-right:4px" onclick="deleteItem('cases','${c.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function editCase(id) {
+  const c = getCase(id);
+  if (!c) return;
+  editId.cases = id;
+  populateSelects();
+  document.getElementById('cs-num').value = c.caseNum;
+  document.getElementById('cs-client').value = c.clientId;
+  document.getElementById('cs-type').value = c.type;
+  document.getElementById('cs-court').value = c.court;
+  document.getElementById('cs-circuit').value = c.circuit||'';
+  document.getElementById('cs-opponent').value = c.opponent||'';
+  document.getElementById('cs-status').value = c.status;
+  document.getElementById('cs-nextdate').value = c.nextDate||'';
+  document.getElementById('cs-subject').value = c.subject||'';
+  document.getElementById('cs-notes').value = c.notes||'';
+  document.querySelector('#caseModal .modal-header h3').textContent = '✏️ تعديل القضية';
+  openModal('caseModal');
+}
+
+// ===== SESSIONS =====
+function saveSession() {
+  const date = document.getElementById('se-date').value;
+  const caseId = document.getElementById('se-case').value;
+  if (!date || !caseId) { toast('التاريخ والقضية مطلوبان', 'error'); return; }
+  const cs = getCase(caseId);
+  const session = {
+    id: editId.sessions || genId(),
+    date,
+    time: document.getElementById('se-time').value,
+    caseId,
+    clientId: cs ? cs.clientId : '',
+    court: document.getElementById('se-court').value,
+    circuit: document.getElementById('se-circuit').value.trim(),
+    result: document.getElementById('se-result').value,
+    notes: document.getElementById('se-notes').value.trim(),
+    createdAt: Date.now()
+  };
+  if (editId.sessions) {
+    db.sessions[db.sessions.findIndex(s => s.id === editId.sessions)] = session;
+    toast('تم تحديث الجلسة');
+  } else {
+    db.sessions.push(session);
+    toast('تم إضافة الجلسة بنجاح');
+  }
+  saveData(); closeModal('sessionModal'); renderSessions(); updateBadges();
+}
+
+function renderSessions() {
+  const q = (document.getElementById('sessionSearch')?.value || '').toLowerCase();
+  let filtered = db.sessions.filter(s => {
+    const cs = getCase(s.caseId);
+    const cl = getClient(s.clientId);
+    return (cs?.caseNum||'').toLowerCase().includes(q) || (cl?.name||'').toLowerCase().includes(q);
+  }).sort((a,b) => new Date(a.date) - new Date(b.date));
+
+  const tbody = document.getElementById('sessionsTable');
+  const empty = document.getElementById('sessionsEmpty');
+  if (!filtered.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  const resultColors = { 'تأجيل': 'badge-orange', 'حكم لصالح الموكل': 'badge-green', 'حكم ضد الموكل': 'badge-red', 'صلح': 'badge-blue', '': 'badge-gold' };
+  const today = new Date().toISOString().slice(0, 10);
+  tbody.innerHTML = filtered.map((s, i) => {
+    const cs = getCase(s.caseId);
+    const cl = getClient(s.clientId);
+    const isPast = s.date < today;
+    return `<tr style="${!isPast && !s.result ? 'background:rgba(201,168,76,0.04)' : ''}">
+      <td style="color:var(--text-muted)">${i+1}</td>
+      <td><strong style="color:${isPast?'var(--text-muted)':'var(--gold-light)'}">${formatDate(s.date)}</strong></td>
+      <td>${s.time || '-'}</td>
+      <td style="color:var(--gold)">${cs ? cs.caseNum : '-'}</td>
+      <td>${cl ? cl.name : '-'}</td>
+      <td style="font-size:11px">${s.court}</td>
+      <td>${s.circuit||'-'}</td>
+      <td><span class="badge ${resultColors[s.result]||'badge-gold'}">${s.result||'قادمة'}</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editSession('${s.id}')">✏️</button>
+        <button class="btn btn-sm" style="background:rgba(231,76,60,0.15);color:var(--red);border:none;margin-right:4px" onclick="deleteItem('sessions','${s.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function editSession(id) {
+  const s = db.sessions.find(x => x.id === id);
+  if (!s) return;
+  editId.sessions = id;
+  populateSelects();
+  document.getElementById('se-date').value = s.date;
+  document.getElementById('se-time').value = s.time||'';
+  document.getElementById('se-case').value = s.caseId;
+  document.getElementById('se-court').value = s.court;
+  document.getElementById('se-circuit').value = s.circuit||'';
+  document.getElementById('se-result').value = s.result||'';
+  document.getElementById('se-notes').value = s.notes||'';
+  document.querySelector('#sessionModal .modal-header h3').textContent = '✏️ تعديل الجلسة';
+  openModal('sessionModal');
+}
+
+// ===== FINANCE =====
+function saveFinance() {
+  const clientId = document.getElementById('fi-client').value;
+  const total = parseFloat(document.getElementById('fi-total').value) || 0;
+  const desc = document.getElementById('fi-desc').value.trim();
+  if (!clientId || !total || !desc) { toast('الموكل والبيان والمبلغ مطلوبان', 'error'); return; }
+  const paid = parseFloat(document.getElementById('fi-paid').value) || 0;
+  const inv = {
+    id: editId.finance || genId(),
+    clientId,
+    caseId: document.getElementById('fi-case').value,
+    date: document.getElementById('fi-date').value || new Date().toISOString().slice(0,10),
+    desc,
+    total, paid,
+    notes: document.getElementById('fi-notes').value.trim(),
+    createdAt: Date.now()
+  };
+  if (editId.finance) {
+    db.finance[db.finance.findIndex(f => f.id === editId.finance)] = inv;
+    toast('تم تحديث الفاتورة');
+  } else {
+    db.finance.push(inv);
+    toast('تم إضافة الفاتورة بنجاح');
+  }
+  saveData(); closeModal('financeModal'); renderFinance();
+}
+
+function renderFinance() {
+  const q = (document.getElementById('finSearch')?.value || '').toLowerCase();
+  const filtered = db.finance.filter(f => {
+    const cl = getClient(f.clientId);
+    return (cl?.name||'').toLowerCase().includes(q) || f.desc.toLowerCase().includes(q);
+  });
+  const tbody = document.getElementById('financeTable');
+  const empty = document.getElementById('financeEmpty');
+
+  let total = 0, paid = 0;
+  db.finance.forEach(f => { total += f.total; paid += f.paid; });
+  document.getElementById('fin-total').textContent = total.toLocaleString('ar-EG') + ' ج.م';
+  document.getElementById('fin-paid').textContent = paid.toLocaleString('ar-EG') + ' ج.م';
+  document.getElementById('fin-due').textContent = (total - paid).toLocaleString('ar-EG') + ' ج.م';
+
+  if (!filtered.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = filtered.map((f, i) => {
+    const cl = getClient(f.clientId);
+    const cs = getCase(f.caseId);
+    const due = f.total - f.paid;
+    const status = due <= 0 ? ['badge-green','مسدد'] : f.paid > 0 ? ['badge-orange','جزئي'] : ['badge-red','غير مسدد'];
+    return `<tr>
+      <td style="color:var(--text-muted)">${i+1}</td>
+      <td>${formatDate(f.date)}</td>
+      <td>${cl ? cl.name : '-'}</td>
+      <td style="color:var(--gold);font-size:12px">${cs ? cs.caseNum : '-'}</td>
+      <td>${f.desc}</td>
+      <td style="font-weight:700;color:var(--green)">${f.total.toLocaleString()} ج.م</td>
+      <td style="color:var(--gold)">${f.paid.toLocaleString()} ج.م</td>
+      <td style="color:${due > 0 ? 'var(--red)' : 'var(--text-muted)'}">${due > 0 ? due.toLocaleString()+' ج.م' : '-'}</td>
+      <td><span class="badge ${status[0]}">${status[1]}</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editFinance('${f.id}')">✏️</button>
+        <button class="btn btn-sm" style="background:rgba(231,76,60,0.15);color:var(--red);border:none;margin-right:4px" onclick="deleteItem('finance','${f.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function editFinance(id) {
+  const f = db.finance.find(x => x.id === id);
+  if (!f) return;
+  editId.finance = id;
+  populateSelects();
+  document.getElementById('fi-client').value = f.clientId;
+  document.getElementById('fi-case').value = f.caseId||'';
+  document.getElementById('fi-date').value = f.date||'';
+  document.getElementById('fi-desc').value = f.desc;
+  document.getElementById('fi-total').value = f.total;
+  document.getElementById('fi-paid').value = f.paid;
+  document.getElementById('fi-notes').value = f.notes||'';
+  document.querySelector('#financeModal .modal-header h3').textContent = '✏️ تعديل الفاتورة';
+  openModal('financeModal');
+}
+
+// ===== NOTES =====
+function saveNote() {
+  const title = document.getElementById('no-title').value.trim();
+  const content = document.getElementById('no-content').value.trim();
+  if (!title || !content) { toast('العنوان والمحتوى مطلوبان', 'error'); return; }
+  db.notes.push({
+    id: genId(),
+    title, content,
+    cat: document.getElementById('no-cat').value,
+    createdAt: Date.now()
+  });
+  saveData(); closeModal('noteModal'); renderNotes();
+  toast('تم إضافة الملاحظة');
+}
+
+const noteCatColors = { 'عامة': '#3498db', 'قانونية': '#c9a84c', 'مهمة': '#e74c3c', 'تذكير': '#2ecc71' };
+function renderNotes() {
+  const grid = document.getElementById('notesGrid');
+  const empty = document.getElementById('notesEmpty');
+  if (!db.notes.length) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  grid.innerHTML = db.notes.slice().reverse().map(n => `
+    <div style="background:var(--navy-card);border:1px solid var(--navy-border);border-radius:12px;padding:18px;position:relative;border-top:3px solid ${noteCatColors[n.cat]||'var(--gold)'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <h4 style="font-size:14px;font-weight:700;color:var(--text-main);flex:1;margin-left:8px">${n.title}</h4>
+        <button onclick="deleteItem('notes','${n.id}')" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px">🗑️</button>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7;white-space:pre-wrap">${n.content}</p>
+      <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between">
+        <span class="badge" style="background:rgba(255,255,255,0.05);color:${noteCatColors[n.cat]||'var(--gold)'}">${n.cat}</span>
+        <span style="font-size:11px;color:var(--text-dim)">${formatDate(new Date(n.createdAt).toISOString().slice(0,10))}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== DELETE =====
+function deleteItem(type, id) {
+  if (!confirm('هل أنت متأكد من الحذف؟')) return;
+  db[type] = db[type].filter(x => x.id !== id);
+  saveData();
+  if (type === 'clients') { renderClients(); updateBadges(); }
+  else if (type === 'cases') { renderCases(); updateBadges(); }
+  else if (type === 'sessions') { renderSessions(); updateBadges(); }
+  else if (type === 'finance') renderFinance();
+  else if (type === 'notes') renderNotes();
+  toast('تم الحذف بنجاح', 'info');
+}
+
+// ===== DASHBOARD =====
+function renderDashboard() {
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
+  const monthSessions = db.sessions.filter(s => s.date >= monthStart).length;
+  const active = db.cases.filter(c => c.status === 'جارية').length;
+  const totalIncome = db.finance.reduce((a, f) => a + f.total, 0);
+
+  document.getElementById('stat-clients').textContent = db.clients.length;
+  document.getElementById('stat-cases').textContent = db.cases.length;
+  document.getElementById('stat-active').textContent = active;
+  document.getElementById('stat-income').textContent = totalIncome.toLocaleString('ar-EG');
+  document.getElementById('stat-sessions').textContent = monthSessions;
+
+  // Recent cases
+  const rc = document.getElementById('recentCases');
+  if (!db.cases.length) {
+    rc.innerHTML = '<div class="empty-state"><div class="empty-icon">📁</div><p>لا توجد قضايا بعد</p></div>';
+  } else {
+    const statusColors = { 'جارية': 'badge-orange', 'محكوم فيها': 'badge-green', 'استئناف': 'badge-blue', 'مغلقة': 'badge-gray' };
+    rc.innerHTML = '<div class="table-wrap"><table><thead><tr><th>رقم القضية</th><th>الموكل</th><th>النوع</th><th>الحالة</th></tr></thead><tbody>' +
+      db.cases.slice(-5).reverse().map(c => {
+        const cl = getClient(c.clientId);
+        return `<tr><td style="color:var(--gold);font-weight:700">${c.caseNum}</td><td>${cl?cl.name:'-'}</td><td>${c.type}</td><td><span class="badge ${statusColors[c.status]||'badge-gray'}">${c.status}</span></td></tr>`;
+      }).join('') + '</tbody></table></div>';
+  }
+
+  // Upcoming sessions
+  const today = now.toISOString().slice(0,10);
+  const upcoming = db.sessions.filter(s => s.date >= today && !s.result).sort((a,b) => new Date(a.date)-new Date(b.date)).slice(0,5);
+  const us = document.getElementById('upcomingSessions');
+  if (!upcoming.length) {
+    us.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>لا توجد جلسات قادمة</p></div>';
+  } else {
+    const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+    us.innerHTML = upcoming.map(s => {
+      const d = new Date(s.date);
+      const cs = getCase(s.caseId);
+      const cl = getClient(s.clientId);
+      return `<div class="session-item">
+        <div class="session-date">
+          <div class="day">${d.getDate()}</div>
+          <div class="month">${months[d.getMonth()]}</div>
+        </div>
+        <div class="session-info">
+          <h4>${cs ? cs.caseNum : '-'} ${s.time ? '| '+s.time : ''}</h4>
+          <p>${cl ? cl.name : ''} · ${s.court}</p>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ===== BADGES =====
+function updateBadges() {
+  document.getElementById('clientsBadge').textContent = db.clients.length;
+  document.getElementById('casesBadge').textContent = db.cases.length;
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('sessionsBadge').textContent = db.sessions.filter(s => s.date >= today && !s.result).length;
+}
+
+
+// ===== COURTS DATABASE =====
+const COURTS_DB = [{"name": "محكمة النقض", "category": "⚖️ محاكم عليا ودستورية"}, {"name": "المحكمة الدستورية العليا", "category": "⚖️ محاكم عليا ودستورية"}, {"name": "المحكمة الإدارية العليا", "category": "⚖️ محاكم عليا ودستورية"}, {"name": "المحكمة العسكرية العليا", "category": "⚖️ محاكم عليا ودستورية"}, {"name": "محكمة استئناف القاهرة", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف الإسكندرية", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف طنطا", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف المنصورة", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف الإسماعيلية", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف بني سويف", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف قنا", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف أسيوط", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف سوهاج", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف الأقصر", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف أسوان", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف دمياط", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف الزقازيق", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة استئناف مرسى مطروح", "category": "🏛️ محاكم الاستئناف"}, {"name": "محكمة جنوب القاهرة الابتدائية", "category": "🏛️ محاكم ابتدائية - القاهرة"}, {"name": "محكمة شمال القاهرة الابتدائية", "category": "🏛️ محاكم ابتدائية - القاهرة"}, {"name": "محكمة شرق القاهرة الابتدائية", "category": "🏛️ محاكم ابتدائية - القاهرة"}, {"name": "محكمة غرب القاهرة الابتدائية", "category": "🏛️ محاكم ابتدائية - القاهرة"}, {"name": "محكمة وسط القاهرة الابتدائية", "category": "🏛️ محاكم ابتدائية - القاهرة"}, {"name": "محكمة الجيزة الابتدائية", "category": "🏛️ محاكم ابتدائية - الجيزة"}, {"name": "محكمة شمال الجيزة الابتدائية", "category": "🏛️ محاكم ابتدائية - الجيزة"}, {"name": "محكمة جنوب الجيزة الابتدائية", "category": "🏛️ محاكم ابتدائية - الجيزة"}, {"name": "محكمة أكتوبر الابتدائية", "category": "🏛️ محاكم ابتدائية - الجيزة"}, {"name": "محكمة الصف الابتدائية", "category": "🏛️ محاكم ابتدائية - الجيزة"}, {"name": "محكمة العياط الابتدائية", "category": "🏛️ محاكم ابتدائية - الجيزة"}, {"name": "محكمة البدرشين الابتدائية", "category": "🏛️ محاكم ابتدائية - الجيزة"}, {"name": "محكمة الإسكندرية الابتدائية", "category": "🏛️ محاكم ابتدائية - الإسكندرية"}, {"name": "محكمة شمال الإسكندرية الابتدائية", "category": "🏛️ محاكم ابتدائية - الإسكندرية"}, {"name": "محكمة جنوب الإسكندرية الابتدائية", "category": "🏛️ محاكم ابتدائية - الإسكندرية"}, {"name": "محكمة غرب الإسكندرية الابتدائية", "category": "🏛️ محاكم ابتدائية - الإسكندرية"}, {"name": "محكمة طنطا الابتدائية", "category": "🏛️ محاكم ابتدائية - الغربية"}, {"name": "محكمة المحلة الكبرى الابتدائية", "category": "🏛️ محاكم ابتدائية - الغربية"}, {"name": "محكمة زفتى الابتدائية", "category": "🏛️ محاكم ابتدائية - الغربية"}, {"name": "محكمة سمنود الابتدائية", "category": "🏛️ محاكم ابتدائية - الغربية"}, {"name": "محكمة بسيون الابتدائية", "category": "🏛️ محاكم ابتدائية - الغربية"}, {"name": "محكمة السنطة الابتدائية", "category": "🏛️ محاكم ابتدائية - الغربية"}, {"name": "محكمة المنصورة الابتدائية", "category": "🏛️ محاكم ابتدائية - الدقهلية"}, {"name": "محكمة دكرنس الابتدائية", "category": "🏛️ محاكم ابتدائية - الدقهلية"}, {"name": "محكمة ميت غمر الابتدائية", "category": "🏛️ محاكم ابتدائية - الدقهلية"}, {"name": "محكمة طلخا الابتدائية", "category": "🏛️ محاكم ابتدائية - الدقهلية"}, {"name": "محكمة بلقاس الابتدائية", "category": "🏛️ محاكم ابتدائية - الدقهلية"}, {"name": "محكمة منية النصر الابتدائية", "category": "🏛️ محاكم ابتدائية - الدقهلية"}, {"name": "محكمة الجمالية الابتدائية", "category": "🏛️ محاكم ابتدائية - الدقهلية"}, {"name": "محكمة السنبلاوين الابتدائية", "category": "🏛️ محاكم ابتدائية - الدقهلية"}, {"name": "محكمة الزقازيق الابتدائية", "category": "🏛️ محاكم ابتدائية - الشرقية"}, {"name": "محكمة بلبيس الابتدائية", "category": "🏛️ محاكم ابتدائية - الشرقية"}, {"name": "محكمة منيا القمح الابتدائية", "category": "🏛️ محاكم ابتدائية - الشرقية"}, {"name": "محكمة فاقوس الابتدائية", "category": "🏛️ محاكم ابتدائية - الشرقية"}, {"name": "محكمة ديرب نجم الابتدائية", "category": "🏛️ محاكم ابتدائية - الشرقية"}, {"name": "محكمة أبو حماد الابتدائية", "category": "🏛️ محاكم ابتدائية - الشرقية"}, {"name": "محكمة الصالحية الجديدة الابتدائية", "category": "🏛️ محاكم ابتدائية - الشرقية"}, {"name": "محكمة القنايات الابتدائية", "category": "🏛️ محاكم ابتدائية - الشرقية"}, {"name": "محكمة الحسينية الابتدائية", "category": "🏛️ محاكم ابتدائية - الشرقية"}, {"name": "العاشر من رمضان الابتدائية", "category": "🏛️ محاكم ابتدائية - الشرقية"}, {"name": "محكمة بنها الابتدائية", "category": "🏛️ محاكم ابتدائية - القليوبية"}, {"name": "محكمة شبرا الخيمة الابتدائية", "category": "🏛️ محاكم ابتدائية - القليوبية"}, {"name": "محكمة قليوب الابتدائية", "category": "🏛️ محاكم ابتدائية - القليوبية"}, {"name": "محكمة طوخ الابتدائية", "category": "🏛️ محاكم ابتدائية - القليوبية"}, {"name": "محكمة الخانكة الابتدائية", "category": "🏛️ محاكم ابتدائية - القليوبية"}, {"name": "محكمة القناطر الخيرية الابتدائية", "category": "🏛️ محاكم ابتدائية - القليوبية"}, {"name": "محكمة كفر شكر الابتدائية", "category": "🏛️ محاكم ابتدائية - القليوبية"}, {"name": "محكمة شبين الكوم الابتدائية", "category": "🏛️ محاكم ابتدائية - المنوفية"}, {"name": "محكمة منوف الابتدائية", "category": "🏛️ محاكم ابتدائية - المنوفية"}, {"name": "محكمة أشمون الابتدائية", "category": "🏛️ محاكم ابتدائية - المنوفية"}, {"name": "محكمة مدينة السادات الابتدائية", "category": "🏛️ محاكم ابتدائية - المنوفية"}, {"name": "محكمة الباجور الابتدائية", "category": "🏛️ محاكم ابتدائية - المنوفية"}, {"name": "محكمة قويسنا الابتدائية", "category": "🏛️ محاكم ابتدائية - المنوفية"}, {"name": "محكمة بركة السبع الابتدائية", "category": "🏛️ محاكم ابتدائية - المنوفية"}, {"name": "محكمة تلا الابتدائية", "category": "🏛️ محاكم ابتدائية - المنوفية"}, {"name": "محكمة دمنهور الابتدائية", "category": "🏛️ محاكم ابتدائية - البحيرة"}, {"name": "محكمة كفر الدوار الابتدائية", "category": "🏛️ محاكم ابتدائية - البحيرة"}, {"name": "محكمة رشيد الابتدائية", "category": "🏛️ محاكم ابتدائية - البحيرة"}, {"name": "محكمة إيتاي البارود الابتدائية", "category": "🏛️ محاكم ابتدائية - البحيرة"}, {"name": "محكمة أبو المطامير الابتدائية", "category": "🏛️ محاكم ابتدائية - البحيرة"}, {"name": "محكمة حوش عيسى الابتدائية", "category": "🏛️ محاكم ابتدائية - البحيرة"}, {"name": "محكمة كوم حمادة الابتدائية", "category": "🏛️ محاكم ابتدائية - البحيرة"}, {"name": "محكمة المحمودية الابتدائية", "category": "🏛️ محاكم ابتدائية - البحيرة"}, {"name": "محكمة الدلنجات الابتدائية", "category": "🏛️ محاكم ابتدائية - البحيرة"}, {"name": "محكمة كفر الشيخ الابتدائية", "category": "🏛️ محاكم ابتدائية - كفر الشيخ"}, {"name": "محكمة دسوق الابتدائية", "category": "🏛️ محاكم ابتدائية - كفر الشيخ"}, {"name": "محكمة فوه الابتدائية", "category": "🏛️ محاكم ابتدائية - كفر الشيخ"}, {"name": "محكمة مطوبس الابتدائية", "category": "🏛️ محاكم ابتدائية - كفر الشيخ"}, {"name": "محكمة بيلا الابتدائية", "category": "🏛️ محاكم ابتدائية - كفر الشيخ"}, {"name": "محكمة برج البرلس الابتدائية", "category": "🏛️ محاكم ابتدائية - كفر الشيخ"}, {"name": "محكمة الرياض الابتدائية", "category": "🏛️ محاكم ابتدائية - كفر الشيخ"}, {"name": "محكمة دمياط الابتدائية", "category": "🏛️ محاكم ابتدائية - دمياط"}, {"name": "محكمة فارسكور الابتدائية", "category": "🏛️ محاكم ابتدائية - دمياط"}, {"name": "محكمة الزرقا الابتدائية", "category": "🏛️ محاكم ابتدائية - دمياط"}, {"name": "محكمة الإسماعيلية الابتدائية", "category": "🏛️ محاكم ابتدائية - الإسماعيلية"}, {"name": "محكمة القنطرة الابتدائية", "category": "🏛️ محاكم ابتدائية - الإسماعيلية"}, {"name": "محكمة أبو صوير الابتدائية", "category": "🏛️ محاكم ابتدائية - الإسماعيلية"}, {"name": "محكمة بورسعيد الابتدائية", "category": "🏛️ محاكم ابتدائية - بورسعيد"}, {"name": "محكمة شرق بورسعيد الابتدائية", "category": "🏛️ محاكم ابتدائية - بورسعيد"}, {"name": "محكمة السويس الابتدائية", "category": "🏛️ محاكم ابتدائية - السويس"}, {"name": "محكمة عتاقة الابتدائية", "category": "🏛️ محاكم ابتدائية - السويس"}, {"name": "محكمة العريش الابتدائية", "category": "🏛️ محاكم ابتدائية - شمال سيناء"}, {"name": "محكمة بئر العبد الابتدائية", "category": "🏛️ محاكم ابتدائية - شمال سيناء"}, {"name": "محكمة الشيخ زويد الابتدائية", "category": "🏛️ محاكم ابتدائية - شمال سيناء"}, {"name": "محكمة الطور الابتدائية", "category": "🏛️ محاكم ابتدائية - جنوب سيناء"}, {"name": "محكمة شرم الشيخ الابتدائية", "category": "🏛️ محاكم ابتدائية - جنوب سيناء"}, {"name": "محكمة بني سويف الابتدائية", "category": "🏛️ محاكم ابتدائية - بني سويف"}, {"name": "محكمة الفشن الابتدائية", "category": "🏛️ محاكم ابتدائية - بني سويف"}, {"name": "محكمة ناصر الابتدائية", "category": "🏛️ محاكم ابتدائية - بني سويف"}, {"name": "محكمة إهناسيا الابتدائية", "category": "🏛️ محاكم ابتدائية - بني سويف"}, {"name": "محكمة ببا الابتدائية", "category": "🏛️ محاكم ابتدائية - بني سويف"}, {"name": "محكمة الواسطى الابتدائية", "category": "🏛️ محاكم ابتدائية - بني سويف"}, {"name": "محكمة سمسطا الابتدائية", "category": "🏛️ محاكم ابتدائية - بني سويف"}, {"name": "محكمة الفيوم الابتدائية", "category": "🏛️ محاكم ابتدائية - الفيوم"}, {"name": "محكمة إطسا الابتدائية", "category": "🏛️ محاكم ابتدائية - الفيوم"}, {"name": "محكمة طامية الابتدائية", "category": "🏛️ محاكم ابتدائية - الفيوم"}, {"name": "محكمة يوسف الصديق الابتدائية", "category": "🏛️ محاكم ابتدائية - الفيوم"}, {"name": "محكمة سنورس الابتدائية", "category": "🏛️ محاكم ابتدائية - الفيوم"}, {"name": "محكمة المنيا الابتدائية", "category": "🏛️ محاكم ابتدائية - المنيا"}, {"name": "محكمة ملوي الابتدائية", "category": "🏛️ محاكم ابتدائية - المنيا"}, {"name": "محكمة أبو قرقاص الابتدائية", "category": "🏛️ محاكم ابتدائية - المنيا"}, {"name": "محكمة سمالوط الابتدائية", "category": "🏛️ محاكم ابتدائية - المنيا"}, {"name": "محكمة العدوة الابتدائية", "category": "🏛️ محاكم ابتدائية - المنيا"}, {"name": "محكمة مطاي الابتدائية", "category": "🏛️ محاكم ابتدائية - المنيا"}, {"name": "محكمة بني مزار الابتدائية", "category": "🏛️ محاكم ابتدائية - المنيا"}, {"name": "محكمة المغاغة الابتدائية", "category": "🏛️ محاكم ابتدائية - المنيا"}, {"name": "محكمة دير مواس الابتدائية", "category": "🏛️ محاكم ابتدائية - المنيا"}, {"name": "محكمة أسيوط الابتدائية", "category": "🏛️ محاكم ابتدائية - أسيوط"}, {"name": "محكمة ديروط الابتدائية", "category": "🏛️ محاكم ابتدائية - أسيوط"}, {"name": "محكمة منفلوط الابتدائية", "category": "🏛️ محاكم ابتدائية - أسيوط"}, {"name": "محكمة أبو تيج الابتدائية", "category": "🏛️ محاكم ابتدائية - أسيوط"}, {"name": "محكمة القوصية الابتدائية", "category": "🏛️ محاكم ابتدائية - أسيوط"}, {"name": "محكمة الغنايم الابتدائية", "category": "🏛️ محاكم ابتدائية - أسيوط"}, {"name": "محكمة ساحل سليم الابتدائية", "category": "🏛️ محاكم ابتدائية - أسيوط"}, {"name": "محكمة صدفا الابتدائية", "category": "🏛️ محاكم ابتدائية - أسيوط"}, {"name": "محكمة سوهاج الابتدائية", "category": "🏛️ محاكم ابتدائية - سوهاج"}, {"name": "محكمة جرجا الابتدائية", "category": "🏛️ محاكم ابتدائية - سوهاج"}, {"name": "محكمة أخميم الابتدائية", "category": "🏛️ محاكم ابتدائية - سوهاج"}, {"name": "محكمة المراغة الابتدائية", "category": "🏛️ محاكم ابتدائية - سوهاج"}, {"name": "محكمة البلينا الابتدائية", "category": "🏛️ محاكم ابتدائية - سوهاج"}, {"name": "محكمة دار السلام الابتدائية", "category": "🏛️ محاكم ابتدائية - سوهاج"}, {"name": "محكمة طما الابتدائية", "category": "🏛️ محاكم ابتدائية - سوهاج"}, {"name": "محكمة طهطا الابتدائية", "category": "🏛️ محاكم ابتدائية - سوهاج"}, {"name": "محكمة المنشأة الابتدائية", "category": "🏛️ محاكم ابتدائية - سوهاج"}, {"name": "محكمة قنا الابتدائية", "category": "🏛️ محاكم ابتدائية - قنا"}, {"name": "محكمة نجع حمادي الابتدائية", "category": "🏛️ محاكم ابتدائية - قنا"}, {"name": "محكمة دشنا الابتدائية", "category": "🏛️ محاكم ابتدائية - قنا"}, {"name": "محكمة قوص الابتدائية", "category": "🏛️ محاكم ابتدائية - قنا"}, {"name": "محكمة فرشوط الابتدائية", "category": "🏛️ محاكم ابتدائية - قنا"}, {"name": "محكمة الوقف الابتدائية", "category": "🏛️ محاكم ابتدائية - قنا"}, {"name": "محكمة أبو تشت الابتدائية", "category": "🏛️ محاكم ابتدائية - قنا"}, {"name": "محكمة الأقصر الابتدائية", "category": "🏛️ محاكم ابتدائية - الأقصر"}, {"name": "محكمة إسنا الابتدائية", "category": "🏛️ محاكم ابتدائية - الأقصر"}, {"name": "محكمة الأرمنت الابتدائية", "category": "🏛️ محاكم ابتدائية - الأقصر"}, {"name": "محكمة قوص الابتدائية", "category": "🏛️ محاكم ابتدائية - الأقصر"}, {"name": "محكمة أسوان الابتدائية", "category": "🏛️ محاكم ابتدائية - أسوان"}, {"name": "محكمة كوم أمبو الابتدائية", "category": "🏛️ محاكم ابتدائية - أسوان"}, {"name": "محكمة إدفو الابتدائية", "category": "🏛️ محاكم ابتدائية - أسوان"}, {"name": "محكمة دراو الابتدائية", "category": "🏛️ محاكم ابتدائية - أسوان"}, {"name": "محكمة أبو سمبل الابتدائية", "category": "🏛️ محاكم ابتدائية - أسوان"}, {"name": "محكمة الغردقة الابتدائية", "category": "🏛️ محاكم ابتدائية - البحر الأحمر"}, {"name": "محكمة سفاجا الابتدائية", "category": "🏛️ محاكم ابتدائية - البحر الأحمر"}, {"name": "محكمة القصير الابتدائية", "category": "🏛️ محاكم ابتدائية - البحر الأحمر"}, {"name": "محكمة الخارجة الابتدائية", "category": "🏛️ محاكم ابتدائية - الوادي الجديد"}, {"name": "محكمة الداخلة الابتدائية", "category": "🏛️ محاكم ابتدائية - الوادي الجديد"}, {"name": "محكمة الفرافرة الابتدائية", "category": "🏛️ محاكم ابتدائية - الوادي الجديد"}, {"name": "محكمة مرسى مطروح الابتدائية", "category": "🏛️ محاكم ابتدائية - مطروح"}, {"name": "محكمة سيوة الابتدائية", "category": "🏛️ محاكم ابتدائية - مطروح"}, {"name": "محكمة سلوم الابتدائية", "category": "🏛️ محاكم ابتدائية - مطروح"}, {"name": "المحكمة الاقتصادية بالقاهرة", "category": "⚖️ المحاكم الاقتصادية"}, {"name": "المحكمة الاقتصادية بالإسكندرية", "category": "⚖️ المحاكم الاقتصادية"}, {"name": "المحكمة الاقتصادية بالمنصورة", "category": "⚖️ المحاكم الاقتصادية"}, {"name": "المحكمة الاقتصادية بالإسماعيلية", "category": "⚖️ المحاكم الاقتصادية"}, {"name": "المحكمة الاقتصادية بأسيوط", "category": "⚖️ المحاكم الاقتصادية"}, {"name": "المحكمة الاقتصادية بطنطا", "category": "⚖️ المحاكم الاقتصادية"}, {"name": "محكمة أسرة القاهرة", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة الجيزة", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة الإسكندرية", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة طنطا", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة المنصورة", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة الزقازيق", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة بني سويف", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة المنيا", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة أسيوط", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة سوهاج", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة قنا", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة الأقصر", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة أسوان", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة دمياط", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة الإسماعيلية", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة بورسعيد", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة السويس", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة أسرة الفيوم", "category": "👨‍👩‍👧 محاكم الأسرة"}, {"name": "محكمة العمال بالقاهرة", "category": "👷 محاكم العمال"}, {"name": "محكمة العمال بالجيزة", "category": "👷 محاكم العمال"}, {"name": "محكمة العمال بالإسكندرية", "category": "👷 محاكم العمال"}, {"name": "محكمة العمال بطنطا", "category": "👷 محاكم العمال"}, {"name": "محكمة العمال بالمنصورة", "category": "👷 محاكم العمال"}, {"name": "محكمة العمال بالزقازيق", "category": "👷 محاكم العمال"}, {"name": "محكمة العمال بأسيوط", "category": "👷 محاكم العمال"}, {"name": "محكمة العمال بسوهاج", "category": "👷 محاكم العمال"}, {"name": "محكمة العمال ببني سويف", "category": "👷 محاكم العمال"}, {"name": "محكمة العمال بالمنيا", "category": "👷 محاكم العمال"}, {"name": "محكمة العمال بالإسماعيلية", "category": "👷 محاكم العمال"}, {"name": "محكمة العمال ببورسعيد", "category": "👷 محاكم العمال"}, {"name": "محكمة القضاء الإداري بالقاهرة", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري بالإسكندرية", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري بطنطا", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري بالمنصورة", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري بأسيوط", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري بقنا", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري بالإسماعيلية", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري بالزقازيق", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري بالمنيا", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري ببني سويف", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري بسوهاج", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري بالأقصر", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة القضاء الإداري بأسوان", "category": "🏢 محاكم القضاء الإداري"}, {"name": "محكمة عابدين الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة الزيتون الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة مصر الجديدة الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة حلوان الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة المعادي الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة المطرية الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة عين شمس الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة مدينة نصر الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة الأميرية الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة العباسية الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة بولاق الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة الدقي الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة إمبابة الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة الهرم الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة الدوقي الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة فيصل الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة بدر الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة العبور الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة الشيخ زايد الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "محكمة السادس من أكتوبر الجزئية", "category": "🏛️ المحاكم الجزئية الكبرى - القاهرة والجيزة"}, {"name": "المحكمة العسكرية الكلية للقاهرة", "category": "🎖️ المحاكم العسكرية"}, {"name": "المحكمة العسكرية الكلية للإسكندرية", "category": "🎖️ المحاكم العسكرية"}, {"name": "المحكمة العسكرية الكلية للإسماعيلية", "category": "🎖️ المحاكم العسكرية"}, {"name": "المحكمة العسكرية الجزئية للقاهرة", "category": "🎖️ المحاكم العسكرية"}];
+
+function courtSearch(inputId) {
+  const input = document.getElementById(inputId);
+  const dropdown = document.getElementById(inputId + '-dropdown');
+  const q = input.value.trim();
+  
+  let filtered;
+  if (!q) {
+    // Show all grouped
+    filtered = COURTS_DB;
+  } else {
+    filtered = COURTS_DB.filter(c => c.name.includes(q) || c.category.includes(q));
+  }
+  
+  if (!filtered.length) {
+    dropdown.innerHTML = '<div class="court-no-result">🔍 لا توجد نتائج — جرّب بحثاً مختلفاً</div>';
+    dropdown.classList.add('open');
+    return;
+  }
+  
+  // Group by category
+  const groups = {};
+  filtered.forEach(c => {
+    if (!groups[c.category]) groups[c.category] = [];
+    groups[c.category].push(c);
+  });
+  
+  let html2 = '';
+  for (const [cat, courts] of Object.entries(groups)) {
+    html2 += `<div class="court-group-label">${cat}</div>`;
+    courts.forEach(c => {
+      const highlighted = q ? c.name.replace(new RegExp(q, 'g'), `<mark>${q}</mark>`) : c.name;
+      html2 += `<div class="court-option" onmousedown="selectCourt('${inputId}','${c.name.replace(/'/g,"\\'")}')">${highlighted}</div>`;
+    });
+  }
+  
+  dropdown.innerHTML = html2;
+  dropdown.classList.add('open');
+}
+
+function selectCourt(inputId, name) {
+  document.getElementById(inputId).value = name;
+  document.getElementById(inputId + '-dropdown').classList.remove('open');
+}
+
+function courtBlur(inputId) {
+  setTimeout(() => {
+    const dd = document.getElementById(inputId + '-dropdown');
+    if (dd) dd.classList.remove('open');
+  }, 200);
+}
+
+// ===== INIT =====
+function init() {
+  loadData();
+  updateBadges();
+  renderDashboard();
+  const now = new Date();
+  document.getElementById('pageDate').textContent = now.toLocaleDateString('ar-EG', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+
+init();
+</script>
+</body>
+</html>
