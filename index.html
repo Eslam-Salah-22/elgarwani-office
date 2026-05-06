@@ -1469,4 +1469,24 @@ function init() {
 init();
 </script>
 </body>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+
+<script>
+  // ده كود الربط اللي هتاخده من جوجل (ضع بياناتك هنا)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAEON60yLrabCsUs3v5d9V9VOZXPGPQWQw",
+    authDomain: "elgarwanilaw.firebaseapp.com",
+    databaseURL: "https://elgarwani-law-default-rtdb.firebaseio.com",
+    projectId: "elgarwanilaw",
+    storageBucket: "elgarwanilaw.firebasestorage.app",
+    messagingSenderId: "906030130488",
+    appId: "1:906030130488:web:0bfdf7d6a6ead7ab5a4dcd"
+    measurementId: "G-4WP9LSZEBY"
+  };
+
+  // تشغيل فايربيز
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+</script>
 </html>
